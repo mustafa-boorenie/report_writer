@@ -1,10 +1,4 @@
-import os
-from openai import OpenAI
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
-
+from openai import OpenAI 
 # Initialize OpenAI client
 client = OpenAI()
 
@@ -29,7 +23,7 @@ try:
     print("Assistant:", response.choices[0].message.content)
     research_question = response.choices[0].message.content
 except Exception as e:
-    print(f"An error occurred: {e}")
+    print(f"An error occurred generating the research question: {e}")
 
 # Make an API call for literature review/introduction
 
@@ -52,20 +46,13 @@ intro_prompt = (
 )
 
 try:
-    response = client.chat.completions.create(
-        model="gpt-4.1",
-        messages=[
-            {
-                "role": "developer",
-                "content": intro_prompt
-            },
-            {
-                "role": "user",
-                "content": "write an introduction for the following research question: {research_question}"
-            },
-        ]
+    response = client.responses.create(
+        model="o3",
+        background=True,
+        stream=True,
+        input=intro_prompt
     )
-    print("Assistant:", response.choices[0].message.content)
+    print("Assistant:", response.choices[0].output_text)
 except Exception as e:
-    print(f"An error occurred: {e}")
+    print(f"An error occurred generating the introduction: {e}")
 
